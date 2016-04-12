@@ -1,5 +1,6 @@
 package GetCookies;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,9 +42,9 @@ public class GetMultiCookieMSinaTimely {
 			System.out.println(new Date() + "three args:cookieFile path,chromedriver path,cookie save path");
 			System.exit(0);
 		}*/
-		GetMultiCookieMSinaTimely.cookieFile = "E:\\学习\\微博爬虫\\cookie\\user.txt";
-		GetMultiCookieMSinaTimely.chromedriverPath = "E:\\学习\\微博爬虫\\cookie\\chromedriver.exe";
-		GetMultiCookieMSinaTimely.cookieSavePath = "E:\\学习\\微博爬虫\\cookie\\";
+		GetMultiCookieMSinaTimely.cookieFile = "F:/WeiBo/user.txt";
+		GetMultiCookieMSinaTimely.chromedriverPath = "F:/WeiBo/chromedriver.exe";
+		GetMultiCookieMSinaTimely.cookieSavePath = "F:/WeiBo/cookie/";
 		if(new File(GetMultiCookieMSinaTimely.cookieFile).isFile()) {
 			GetMultiCookieMSinaTimely getCookies = new GetMultiCookieMSinaTimely();
 			getCookies.getCookie();
