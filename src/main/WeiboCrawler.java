@@ -23,8 +23,8 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
-import Util.FileWriteUtil;
-import Util.Id2MidUtil;
+import util.FileWriteUtil;
+import util.Id2MidUtil;
 
 /**
  * 
@@ -48,15 +48,17 @@ public class WeiboCrawler {
 	private static int cnt = 0;
 
 	public static void main(String[] args) {
+		
 		String url=null;
-		
-		url = "http://weibo.com/2656274875/DqCvNvRLZ?type=comment#_rnd1460446244167";
-		
+		url = "http://weibo.com/3942244083/DqGls0t3C?type=comment";		
 		int deep = 18;// 采集深度
-		int sleepTime = 1000;// 采集间隔时间
+		int sleepTime = 2000;// 采集间隔时间
 		int numCookies = 7;// cookies数目
 		Crawler(url, sleepTime, deep, numCookies);
+		//Crawler(args[0], sleepTime, deep, numCookies);
 		System.out.println("采集结束："+url);
+		System.out.println("保存目录："+destfile);
+		
 	}
 
 	public static void Crawler(String url, int sleepTime, int deep, int numCookies) {
@@ -69,17 +71,32 @@ public class WeiboCrawler {
 		String uid = GetUid(Url);// 1713926427
 
 		outputpath = new CrawlInit().CrawlerInit(mid, uid, numCookies);// 首页信息,返回
+		while (outputpath.equals("error")){
+			outputpath = new CrawlInit().CrawlerInit(mid, uid, numCookies);// 首页信息,返回
+			if(!outputpath.equals("error"))break;
+			try {
+				Thread.sleep(5000);
+				System.out.println("等待5s重新开始采集...");
+			}
+			catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		int index = outputpath.indexOf(mid) + 10;
+		String ctime = outputpath.substring(index, index + 14);
+		destfile = outputpath + "/msgid_" + mid + "_" + ctime + ".txt";// 采集保存目录
+		System.out.println("输出目录:"+destfile);// 输出目录
+		System.out.println("初始化结束,等待5s开始采集...");
 		try {
 			Thread.sleep(5000);
 		}
 		catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}																// 输出目录
-		//System.out.println(outputpath);
-		int index = outputpath.indexOf(mid) + 10;
-		String ctime = outputpath.substring(index, index + 14);
-		destfile = outputpath + "/msgid_" + mid + "_" + ctime + ".txt";// 采集保存目录
+		}																
+		
+		
 
 		// 获得页数
 		int PageNum = GetPageNum(mid, uid, 0, CrawlDeep);
@@ -187,7 +204,7 @@ public class WeiboCrawler {
 				if (result.select("a").size() > 0) {
 					zname = result.select("a").get(0).text();// 转发的用户名
 					zid = result.select("a").get(0).toString();// 转发的用户id
-					if (zid.indexOf("u") == 10) {// 正常的用户id
+					if (zid.indexOf("u/") == 10) {// 正常的用户id
 						zid = zid.substring(zid.indexOf("\">") - 10, zid.indexOf("\">"));
 					}
 					else {
@@ -222,7 +239,7 @@ public class WeiboCrawler {
 				// 消息ID,用户ID,用户名,屏幕名,转发消息ID,消息内容,消息URL,来源,赞数,发布时间,层数
 				// tzmid,zid,zname,zmid,mid,ztext,zurl,zsource,zzan,ztime,deep
 				cnt++;
-				String wString = tzmid + "," + zid + "," + zname + "," + zmid + "," + mid + "," + ztext + "," + zurl + "," + zsource + "," + zzan + "," + ztime + "," + deep + ",,";
+				String wString = tzmid + "|" + zid + "|" + zname + "|" + zmid + "|" + mid + "|" + ztext + "|" + zurl + "|" + zsource + "|" + zzan + "|" + ztime + "|" + deep + "|0|0";
 				System.out.println(cnt + ":" + wString);
 
 				StringBuffer sBuilder = new StringBuffer();
@@ -330,7 +347,7 @@ public class WeiboCrawler {
 
 		// 转发内容
 		if (info.select("span[class=cmt]").text().equals("")) {// 不是转发的内容
-			text = info.select("span[class=ctt]").text();// 正文
+			text = info.select("span[class=ctt]").text().substring(1);// 正文
 		}
 		else {
 			text = info.text();// 转发理由
@@ -413,7 +430,7 @@ public class WeiboCrawler {
 			if (result.select("a").size() > 0) {
 				zname = result.select("a").get(0).text();// 转发的用户名
 				zid = result.select("a").get(0).toString();// 转发的用户id
-				if (zid.indexOf("u") == 10) {// 正常的用户id
+				if (zid.indexOf("u/") == 10) {// 正常的用户id
 					zid = zid.substring(zid.indexOf("\">") - 10, zid.indexOf("\">"));
 				}
 				else {
@@ -447,7 +464,8 @@ public class WeiboCrawler {
 			// 消息ID,用户ID,用户名,屏幕名,转发消息ID,消息内容,消息URL,来源,赞数,发布时间,层数
 			// tzmid,zid,zname,zmid,mid,ztext,zurl,zsource,zzan,ztime,deep
 			cnt++;
-			String wString = tzmid + "," + zid + "," + zname + "," + zmid + "," + Nummid + "," + ztext + "," + zurl + "," + zsource + "," + zzan + "," + ztime + "," + deep + ",,";
+			String wString = tzmid + "|" + zid + "|" + zname + "|" + zmid + "|" + Nummid + "|" + ztext + "|" + zurl + "|"
+					+ zsource + "|" + zzan + "|" + ztime + "|" + deep+"|0|0";
 			System.out.println(cnt + ":" + wString);
 
 			StringBuffer sBuilder = new StringBuffer();
@@ -501,7 +519,7 @@ public class WeiboCrawler {
 			if (result.select("a").size() > 0) {
 				zname = result.select("a").get(0).text();// 转发的用户名
 				zid = result.select("a").get(0).toString();// 转发的用户id
-				if (zid.indexOf("u") == 10) {// 正常的用户id
+				if (zid.indexOf("u/") == 10) {// 正常的用户id
 					zid = zid.substring(zid.indexOf("\">") - 10, zid.indexOf("\">"));
 				}
 				else {
@@ -547,7 +565,8 @@ public class WeiboCrawler {
 			zurl = "http://weibo.cn/repost/" + zmid + "?uid=" + zid;
 
 			cnt++;
-			String wString = tzmid + "," + zid + "," + zname + "," + zmid + "," + mid + "," + ztext + "," + zurl + "," + zsource + "," + zzan + "," + ztime + "," + deep + ",,";
+			String wString = tzmid + "|" + zid + "|" + zname + "|" + zmid + "|" + mid + "|" + ztext + "|" + zurl + "|"
+					+ zsource + "|" + zzan + "|" + ztime + "|" + deep+"|0|0";
 			System.out.println(cnt + ":" + wString);
 
 			StringBuffer sBuilder = new StringBuffer();

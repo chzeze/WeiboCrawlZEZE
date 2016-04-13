@@ -1,4 +1,4 @@
-package Util;
+package util;
 
 
 /**
@@ -11,8 +11,8 @@ package Util;
  */
 public class Id2MidUtil {
 	public static void main(String[] args) {
-		System.out.println(new Id2MidUtil().Uid2Mid("DkWml5VJC"));
-		System.out.println(Mid2Uid("3949838968159454"));
+		System.out.println(new Id2MidUtil().Uid2Mid("DqbYXCXln"));
+		System.out.println(Mid2Uid("3963475804244332"));
 	}
 	private static String[] str62keys = { "0", "1", "2", "3", "4", "5", "6",
 			"7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",

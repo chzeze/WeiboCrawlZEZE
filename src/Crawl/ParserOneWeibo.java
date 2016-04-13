@@ -1,4 +1,4 @@
-package Crawl;
+package crawl;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -8,8 +8,8 @@ import org.jsoup.select.Elements;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import Util.FileWriteUtil;
-import Util.Id2MidUtil;
+import util.FileWriteUtil;
+import util.Id2MidUtil;
 
 /**
  * 

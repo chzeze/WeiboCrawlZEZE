@@ -1,8 +1,8 @@
-package Crawl;
+package crawl;
 
 import org.apache.log4j.Logger;
 
-import Util.FileWriteUtil;
+import util.FileWriteUtil;
 
 /**
  * 

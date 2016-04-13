@@ -25,8 +25,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.sun.jna.Native.ffi_callback;
 
-import Util.FileWriteUtil;
-import Util.Id2MidUtil;
+import util.FileWriteUtil;
+import util.Id2MidUtil;
 
 /**
  * 
@@ -68,16 +68,18 @@ public class CrawlInit {
 		File file2 = new File(outputpath);
 		if (!file2.exists())
 			file2.mkdirs();
-		String wString = "tzmid,zid,zname,zmid,mid,ztext,zurl,zsource,zzan,ztime,deep,rt,comment";
+		String wString = "tzmid|zid|zname|zmid|mid|ztext|zurl|zsource|zzan|ztime|deep|rt|comment";
 		StringBuffer sBuilder = new StringBuffer();
 		sBuilder.append(wString + "\r\n");
 		FileWriteUtil.WriteDocument(destfile, sBuilder.toString());
-		CrawlBozhuPage(mid, uid);
+		int status=CrawlBozhuPage(mid, uid);
+		if(status==0)
+			return "error";
 		
 		return outputpath;
 	}
 
-	public static void CrawlBozhuPage(String mid, String uid) {
+	public static int CrawlBozhuPage(String mid, String uid) {
 
 		String url = "http://weibo.cn/repost/" + mid + "?uid=" + uid;
 		System.out.println("Parser Url:" + url);
@@ -108,7 +110,9 @@ public class CrawlInit {
 			logger.error(e);
 		}
 
-		parserInitPage(page, mid, uid);// 解析微博
+		int status=parserInitPage(page, mid, uid);// 解析微博
+		if(status==0)
+			return 0;
 
 		String path = null;
 		path = new String(outputpath + "/" + System.currentTimeMillis() + "Page_Init" + ".html");
@@ -120,11 +124,11 @@ public class CrawlInit {
 		SavePage(page, path);// 保存文文件
 		webClient.closeAllWindows();
 		logger.info("execution: Crawl Init Success");
-		return;
+		return 1;
 	}
 
 	// 解析第一页
-	public static void parserInitPage(HtmlPage page, String mid, String uid) {
+	public static int parserInitPage(HtmlPage page, String mid, String uid) {
 		String Nummid = new Id2MidUtil().Uid2Mid(mid);// 数字消息ID
 		String text = null;
 		String name = null;
@@ -141,7 +145,7 @@ public class CrawlInit {
 		Elements BoZhu = info.select("a");
 		if (BoZhu.text().equals("")) {
 			System.err.println("异常页面");
-			return;
+			return 0;
 		}
 
 		// 转发内容
@@ -192,16 +196,16 @@ public class CrawlInit {
 		// 消息ID,用户ID,用户名,Urlid,转发消息ID,消息内容,消息URL,来源,赞数,发布时间,层数,转发数，评论数
 		// tzmid,zid,zname,zmid,mid,ztext,zurl,zsource,zzan,ztime,deep
 		cnt++;
-		String wString = Nummid + "," + uid + "," + name + "," + mid + ","
-		              + "" + "," + text + "," + zurl + ","
-		              + "来源" + "," + zanNum + "," + timeStr + "," + "0"+","+ZhuanFaNum+","+PinlunNum;
+		String wString = Nummid + "|" + uid + "|" + name + "|" + mid + "|"
+		              + "" + "|" + text + "|" + zurl + "|"
+		              + "来源" + "|" + zanNum + "|" + timeStr + "|" + "0"+"|"+ZhuanFaNum+"|"+PinlunNum;
 		System.out.println(cnt + ":" + wString);
 
 		StringBuffer sBuilder = new StringBuffer();
 		sBuilder.append(wString + "\r\n");
 		FileWriteUtil.WriteDocument(destfile, sBuilder.toString());
 
-		return;
+		return 1;
 	}
 
 	// 写入文件

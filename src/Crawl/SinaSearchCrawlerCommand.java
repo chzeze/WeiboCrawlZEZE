@@ -1,4 +1,4 @@
-package Crawl;
+package crawl;
 
 import java.io.File;
 import java.io.FileInputStream;

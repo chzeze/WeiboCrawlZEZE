@@ -1,4 +1,4 @@
-package Crawl;
+package crawl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,8 +23,8 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
-import Util.FileWriteUtil;
-import Util.Id2MidUtil;
+import util.FileWriteUtil;
+import util.Id2MidUtil;
 
 public class Function {
 	private static Logger logger = Logger.getLogger(SourceWeiboCrawler.class);

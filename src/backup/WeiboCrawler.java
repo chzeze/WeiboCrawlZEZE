@@ -23,8 +23,8 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
-import Util.FileWriteUtil;
-import Util.Id2MidUtil;
+import util.FileWriteUtil;
+import util.Id2MidUtil;
 
 /**
  * 

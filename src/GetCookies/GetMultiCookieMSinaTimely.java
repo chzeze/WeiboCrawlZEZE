@@ -1,4 +1,4 @@
-package GetCookies;
+package getCookies;
 
 
 import java.io.BufferedReader;
@@ -49,7 +49,9 @@ public class GetMultiCookieMSinaTimely {
 			GetMultiCookieMSinaTimely getCookies = new GetMultiCookieMSinaTimely();
 			getCookies.getCookie();
 		} else {
-			System.err.println(new Date() + "args is not a file!");
+			System.err.println(new Date() + "Check cookieFile in "
+										+cookieFile+" \n chromedriverPath in "
+										+chromedriverPath);
 		}
 		
     }
